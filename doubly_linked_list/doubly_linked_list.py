@@ -130,12 +130,14 @@ class DoublyLinkedList:
     Need to cover 2 possible conditions:
       1- Make sure the list length !== 0
       2- Make sure the node not already in the end
+      3- Change head if the node being moved to the end is the head
   '''
   def move_to_end(self, node):
     if self.tail and self.tail != node:
       node.delete()
       self.tail.insert_after(node.value)
       self.tail = self.tail.next
+      self.head = self.head if node != self.head else node.next
 
   '''
     delete
@@ -165,13 +167,13 @@ class DoublyLinkedList:
   '''
   def get_max(self):
     if self.head:
-      cursor = self.head # Cursor starts at the head. 
-      max_value = cursor.value
-      while cursor != self.tail:
-        cursor = cursor.next
-        if max_value < cursor.value: # Check if the new cursor location value is bigger.
-          max_value == cursor.value
-      return max_value
+      current_node = self.head
+      max_node = current_node
+      while current_node:
+        if max_node.value < current_node.value:
+          max_node == current_node
+        current_node = current_node.next
+      return max_node.value
     return None
 
   def increment_len(self):
