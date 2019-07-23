@@ -50,13 +50,13 @@ class DoublyLinkedList:
       2- List head != None
   '''
   def add_to_head(self, value):
-    if self.head == None:
+    if self.head:
+      self.head.insert_before(value)
+      self.head = self.head.prev
+    else:
       node = ListNode(value)
       self.head = node
       self.tail = node
-    else:
-      self.head.insert_before(value)
-      self.head = self.head.prev
     self.increment_len()
 
   '''
@@ -74,7 +74,8 @@ class DoublyLinkedList:
         self.head = None
         self.tail = None
       else:
-        self.head.delete()
+        self.head.next.prev = None
+        self.head = self.head.next
       self.decrement_len()
     return removed
 
@@ -109,7 +110,8 @@ class DoublyLinkedList:
         self.head = None
         self.tail = None
       else:
-        self.tail.delete()
+        self.tail.prev.next = None
+        self.tail = self.tail.prev
       self.decrement_len()
     return removed
 
@@ -134,10 +136,13 @@ class DoublyLinkedList:
   '''
   def move_to_end(self, node):
     if self.tail and self.tail != node:
-      node.delete()
+      if self.head == node:
+        self.head = self.head.next
+        self.head.prev = None
+      else:
+        node.delete()
       self.tail.insert_after(node.value)
       self.tail = self.tail.next
-      self.head = self.head if node != self.head else node.next
 
   '''
     delete
@@ -149,7 +154,7 @@ class DoublyLinkedList:
       5- Deleting neither the head or the tail node (a node in the middle of the list)
   '''
   def delete(self, node):
-    if self.head != None:
+    if self.head:
       if self.length == 1:
         self.head = None
         self.tail = None
@@ -166,15 +171,16 @@ class DoublyLinkedList:
       2- List length >= 1
   '''
   def get_max(self):
+    max_value = None
     if self.head:
-      current_node = self.head
-      max_node = current_node
-      while current_node:
-        if max_node.value < current_node.value:
-          max_node == current_node
-        current_node = current_node.next
-      return max_node.value
-    return None
+      current = self.head
+      max_value = self.head.value
+      while current:
+        if current.value > max_value:
+          print(f"curr > max in get+max while: {current.value}")
+          max_value == current.value
+        current = current.next
+    return max_value
 
   def increment_len(self):
     self.length += 1
