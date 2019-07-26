@@ -120,10 +120,15 @@ class DoublyLinkedList:
       Need to cover 2 possible conditions:
       1- Make sure the list length !== 0
       2- Make sure the node is not already in the front
+      3- If the node is the tail
   '''
   def move_to_front(self, node):
-    if self.head and self.head != node:
-      node.delete()
+    if self.head and node != self.head:
+      if node == self.tail:
+        self.tail.prev.next = None
+        self.tail = self.tail.prev
+      else:
+        node.delete()      
       self.head.insert_before(node.value)
       self.head = self.head.prev
 
@@ -137,8 +142,8 @@ class DoublyLinkedList:
   def move_to_end(self, node):
     if self.tail and self.tail != node:
       if self.head == node:
+        self.head.next.prev = None
         self.head = self.head.next
-        self.head.prev = None
       else:
         node.delete()
       self.tail.insert_after(node.value)
@@ -159,9 +164,13 @@ class DoublyLinkedList:
         self.head = None
         self.tail = None
       elif self.head == node:
+        self.head.next.prev = None
         self.head = self.head.next
       elif self.tail == node:
+        self.tail.prev.next = None
         self.tail = self.tail.prev
+      else:
+        node.delete()
       self.decrement_len()
   
   '''
@@ -177,8 +186,7 @@ class DoublyLinkedList:
       max_value = self.head.value
       while current:
         if current.value > max_value:
-          print(f"curr > max in get+max while: {current.value}")
-          max_value == current.value
+          max_value = current.value
         current = current.next
     return max_value
 

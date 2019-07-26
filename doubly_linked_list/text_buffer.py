@@ -55,7 +55,7 @@ class TextBuffer:
             # set other_buffer head's prev node to be the tail of this buffer
             other_buffer.contents.head.prev = self.contents.tail
             self.contents.tail = other_buffer.contents.tail
-            self.__str__()
+            self.contents.length += other_buffer.contents.length
         
     # if we get fed a string instead of a text buffer instance,
     # initialize a new text buffer with this string and then 
@@ -64,23 +64,23 @@ class TextBuffer:
         new_buffer = TextBuffer(string_to_join)
         self.join(new_buffer)
 
+if __name__ == '__main__':
+    text = TextBuffer("Super")
+    print(text)
 
-text = TextBuffer("Super")
-print(text)
+    text.join_string("califragilisticexpealidocious")
+    print(text)
 
-text.join_string("califragilisticexpealidocious")
-print(text)
+    text.append(" is ")
+    text.join(TextBuffer("weird."))
 
-text.append(" is ")
-text.join(TextBuffer("weird."))
+    print(text)
 
-print(text)
+    text.delete_back(6)
+    print(text)
 
-text.delete_back(6)
-print(text)
+    text.prepend("Hey! ")
+    print(text)
 
-text.prepend("Hey! ")
-print(text)
-
-text.delete_front(4)
-print(text)
+    text.delete_front(4)
+    print(text)
