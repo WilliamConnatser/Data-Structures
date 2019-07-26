@@ -1,6 +1,11 @@
+from doubly_linked_list import DoublyLinkedList
+from doubly_linked_list import ListNode
+
 class LRUCache:
   def __init__(self, limit=10):
-    pass
+    self.limit = limit
+    self.cache = {}
+
 
   """
   Retrieves the value associated with the given key. Also
@@ -10,7 +15,16 @@ class LRUCache:
   key-value pair doesn't exist in the cache. 
   """
   def get(self, key):
-    pass
+    if key in self.cache.keys():
+      #If in cache
+      current = self.keyChain.head
+      while current.value != key:
+        current = current.next
+      self.keyChain.move_to_end(current)
+      return self.cache[key]
+    else:
+      #If not in cache
+      return None
 
   """
   Adds the given key-value pair to the cache. The newly-
@@ -23,4 +37,26 @@ class LRUCache:
   the newly-specified value. 
   """
   def set(self, key, value):
-    pass
+    if len(self.cache.keys()) == 0:
+      #If this is the first item in cache
+      self.keyChain = DoublyLinkedList(ListNode(key))
+      self.cache[key] = value
+    elif key in self.cache.keys():
+      #Else If this key is already in cache
+      self.cache[key] = value
+      current = self.keyChain.head
+      while current.value != key:
+        current = current.next
+      self.keyChain.move_to_end(current)
+    elif len(self.cache.keys()) == self.limit:
+      #Else If the cache is at its limits
+      del self.cache[self.keyChain.head.value]
+      self.keyChain.remove_from_head()
+      self.keyChain.add_to_tail(key)
+      self.cache[key] = value
+
+    else:
+      #Else Neither of the above conditions are true
+      #IE. Not first item in cache, key not already in cache, and the cache has not reached the limit
+      self.keyChain.add_to_tail(key)
+      self.cache[key] = value
